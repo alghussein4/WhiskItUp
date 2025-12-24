@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using WhiskItUp.Models;
-//finaltest
+
 namespace WhiskItUp.Controllers
 {
     public class HomeController : Controller
