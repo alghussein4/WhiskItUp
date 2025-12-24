@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using WhiskItUp.Models;
-
+//This is to check Git
 namespace WhiskItUp.Controllers
 {
     public class HomeController : Controller
