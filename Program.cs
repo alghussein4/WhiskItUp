@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using WhiskItUp.Data;
+using WhiskItUp.Data.wip;
 
 var builder = WebApplication.CreateBuilder(args);
 
