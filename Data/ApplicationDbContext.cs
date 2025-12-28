@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using WhiskItUp.Models;
 
 namespace WhiskItUp.Data
 {
@@ -9,5 +10,8 @@ namespace WhiskItUp.Data
             : base(options)
         {
         }
+        public DbSet<WhiskItUp.Models.Recipe> Recipe { get; set; } = default!;
+        public DbSet<WhiskItUp.Models.User> User { get; set; } = default!;
+        public DbSet<WhiskItUp.Models.UserRecipeMapping> UserRecipeMapping { get; set; } = default!;
     }
 }

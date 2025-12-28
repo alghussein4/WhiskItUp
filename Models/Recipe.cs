@@ -6,8 +6,6 @@ namespace WhiskItUp.Models
     {
         public int RecipeId { get; set; }
         //-----------------------------------
-        public string? RecipeTitle { get; set; }
-        //-----------------------------------
         public string? RecipeName { get; set; }
         //-----------------------------------
         public string? RecipeDescription { get; set; }
@@ -18,6 +16,9 @@ namespace WhiskItUp.Models
         [Range(1,20)]
         public int Servings { get; set; }
 
-        
+
+
+        //Navigation
+        public IEnumerable<UserRecipeMapping>? UserRecipeMappings { get; set; }
     }
 }
