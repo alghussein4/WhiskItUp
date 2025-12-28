@@ -16,7 +16,6 @@ namespace WhiskItUp.Models
         public string? Email { get; set; }
         //-----------------------------------
         public EGender Gender { get; set; } = EGender.female;
-
         //-----------------------------------
 
 
