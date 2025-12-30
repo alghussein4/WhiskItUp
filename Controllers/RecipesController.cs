@@ -22,7 +22,7 @@ namespace WhiskItUp.Controllers
         // GET: Recipes
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Recipe.ToListAsync());
+            return View(await _context.tblRecipe.ToListAsync());
         }
 
         // GET: Recipes/Details/5
@@ -33,7 +33,7 @@ namespace WhiskItUp.Controllers
                 return NotFound();
             }
 
-            var recipe = await _context.Recipe
+            var recipe = await _context.tblRecipe
                 .FirstOrDefaultAsync(m => m.RecipeId == id);
             if (recipe == null)
             {
@@ -73,7 +73,7 @@ namespace WhiskItUp.Controllers
                 return NotFound();
             }
 
-            var recipe = await _context.Recipe.FindAsync(id);
+            var recipe = await _context.tblRecipe.FindAsync(id);
             if (recipe == null)
             {
                 return NotFound();
@@ -124,7 +124,7 @@ namespace WhiskItUp.Controllers
                 return NotFound();
             }
 
-            var recipe = await _context.Recipe
+            var recipe = await _context.tblRecipe
                 .FirstOrDefaultAsync(m => m.RecipeId == id);
             if (recipe == null)
             {
@@ -139,10 +139,10 @@ namespace WhiskItUp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var recipe = await _context.Recipe.FindAsync(id);
+            var recipe = await _context.tblRecipe.FindAsync(id);
             if (recipe != null)
             {
-                _context.Recipe.Remove(recipe);
+                _context.tblRecipe.Remove(recipe);
             }
 
             await _context.SaveChangesAsync();
@@ -151,7 +151,7 @@ namespace WhiskItUp.Controllers
 
         private bool RecipeExists(int id)
         {
-            return _context.Recipe.Any(e => e.RecipeId == id);
+            return _context.tblRecipe.Any(e => e.RecipeId == id);
         }
     }
 }

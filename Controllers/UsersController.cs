@@ -22,7 +22,7 @@ namespace WhiskItUp.Controllers
         // GET: Users
         public async Task<IActionResult> Index()
         {
-            return View(await _context.User.ToListAsync());
+            return View(await _context.tblUser.ToListAsync());
         }
 
         // GET: Users/Details/5
@@ -33,7 +33,7 @@ namespace WhiskItUp.Controllers
                 return NotFound();
             }
 
-            var user = await _context.User
+            var user = await _context.tblUser
                 .FirstOrDefaultAsync(m => m.UserId == id);
             if (user == null)
             {
@@ -73,7 +73,7 @@ namespace WhiskItUp.Controllers
                 return NotFound();
             }
 
-            var user = await _context.User.FindAsync(id);
+            var user = await _context.tblUser.FindAsync(id);
             if (user == null)
             {
                 return NotFound();
@@ -124,7 +124,7 @@ namespace WhiskItUp.Controllers
                 return NotFound();
             }
 
-            var user = await _context.User
+            var user = await _context.tblUser
                 .FirstOrDefaultAsync(m => m.UserId == id);
             if (user == null)
             {
@@ -139,10 +139,10 @@ namespace WhiskItUp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var user = await _context.User.FindAsync(id);
+            var user = await _context.tblUser.FindAsync(id);
             if (user != null)
             {
-                _context.User.Remove(user);
+                _context.tblUser.Remove(user);
             }
 
             await _context.SaveChangesAsync();
@@ -151,7 +151,7 @@ namespace WhiskItUp.Controllers
 
         private bool UserExists(int id)
         {
-            return _context.User.Any(e => e.UserId == id);
+            return _context.tblUser.Any(e => e.UserId == id);
         }
     }
 }

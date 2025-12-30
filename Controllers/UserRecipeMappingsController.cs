@@ -22,7 +22,7 @@ namespace WhiskItUp.Controllers
         // GET: UserRecipeMappings
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.UserRecipeMapping.Include(u => u.Recipe).Include(u => u.User);
+            var applicationDbContext = _context.tblUserRecipeMapping.Include(u => u.Recipe).Include(u => u.User);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -34,7 +34,7 @@ namespace WhiskItUp.Controllers
                 return NotFound();
             }
 
-            var userRecipeMapping = await _context.UserRecipeMapping
+            var userRecipeMapping = await _context.tblUserRecipeMapping
                 .Include(u => u.Recipe)
                 .Include(u => u.User)
                 .FirstOrDefaultAsync(m => m.UserRecipeMappingId == id);
@@ -49,8 +49,8 @@ namespace WhiskItUp.Controllers
         // GET: UserRecipeMappings/Create
         public IActionResult Create()
         {
-            ViewData["RecipeId"] = new SelectList(_context.Recipe, "RecipeId", "RecipeId");
-            ViewData["UserId"] = new SelectList(_context.User, "UserId", "FullName");
+            ViewData["RecipeId"] = new SelectList(_context.tblRecipe, "RecipeId", "RecipeId");
+            ViewData["UserId"] = new SelectList(_context.tblUser, "UserId", "FullName");
             return View();
         }
 
@@ -67,8 +67,8 @@ namespace WhiskItUp.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["RecipeId"] = new SelectList(_context.Recipe, "RecipeId", "RecipeId", userRecipeMapping.RecipeId);
-            ViewData["UserId"] = new SelectList(_context.User, "UserId", "FullName", userRecipeMapping.UserId);
+            ViewData["RecipeId"] = new SelectList(_context.tblRecipe, "RecipeId", "RecipeId", userRecipeMapping.RecipeId);
+            ViewData["UserId"] = new SelectList(_context.tblUser, "UserId", "FullName", userRecipeMapping.UserId);
             return View(userRecipeMapping);
         }
 
@@ -80,13 +80,13 @@ namespace WhiskItUp.Controllers
                 return NotFound();
             }
 
-            var userRecipeMapping = await _context.UserRecipeMapping.FindAsync(id);
+            var userRecipeMapping = await _context.tblUserRecipeMapping.FindAsync(id);
             if (userRecipeMapping == null)
             {
                 return NotFound();
             }
-            ViewData["RecipeId"] = new SelectList(_context.Recipe, "RecipeId", "RecipeId", userRecipeMapping.RecipeId);
-            ViewData["UserId"] = new SelectList(_context.User, "UserId", "FullName", userRecipeMapping.UserId);
+            ViewData["RecipeId"] = new SelectList(_context.tblRecipe, "RecipeId", "RecipeId", userRecipeMapping.RecipeId);
+            ViewData["UserId"] = new SelectList(_context.tblUser, "UserId", "FullName", userRecipeMapping.UserId);
             return View(userRecipeMapping);
         }
 
@@ -122,8 +122,8 @@ namespace WhiskItUp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["RecipeId"] = new SelectList(_context.Recipe, "RecipeId", "RecipeId", userRecipeMapping.RecipeId);
-            ViewData["UserId"] = new SelectList(_context.User, "UserId", "FullName", userRecipeMapping.UserId);
+            ViewData["RecipeId"] = new SelectList(_context.tblRecipe, "RecipeId", "RecipeId", userRecipeMapping.RecipeId);
+            ViewData["UserId"] = new SelectList(_context.tblUser, "UserId", "FullName", userRecipeMapping.UserId);
             return View(userRecipeMapping);
         }
 
@@ -135,7 +135,7 @@ namespace WhiskItUp.Controllers
                 return NotFound();
             }
 
-            var userRecipeMapping = await _context.UserRecipeMapping
+            var userRecipeMapping = await _context.tblUserRecipeMapping
                 .Include(u => u.Recipe)
                 .Include(u => u.User)
                 .FirstOrDefaultAsync(m => m.UserRecipeMappingId == id);
@@ -152,10 +152,10 @@ namespace WhiskItUp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var userRecipeMapping = await _context.UserRecipeMapping.FindAsync(id);
+            var userRecipeMapping = await _context.tblUserRecipeMapping.FindAsync(id);
             if (userRecipeMapping != null)
             {
-                _context.UserRecipeMapping.Remove(userRecipeMapping);
+                _context.tblUserRecipeMapping.Remove(userRecipeMapping);
             }
 
             await _context.SaveChangesAsync();
@@ -164,7 +164,7 @@ namespace WhiskItUp.Controllers
 
         private bool UserRecipeMappingExists(int id)
         {
-            return _context.UserRecipeMapping.Any(e => e.UserRecipeMappingId == id);
+            return _context.tblUserRecipeMapping.Any(e => e.UserRecipeMappingId == id);
         }
     }
 }
