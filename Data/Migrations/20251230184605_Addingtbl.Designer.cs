@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WhiskItUp.Data;
 
@@ -11,9 +12,11 @@ using WhiskItUp.Data;
 namespace WhiskItUp.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251230184605_Addingtbl")]
+    partial class Addingtbl
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -232,27 +235,17 @@ namespace WhiskItUp.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RecipeId"));
 
-                    b.Property<int>("Calories")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Description")
+                    b.Property<string>("RecipeDescription")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Difficulty")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsVegetarian")
-                        .HasColumnType("bit");
-
                     b.Property<string>("RecipeName")
-                        .HasMaxLength(35)
-                        .HasColumnType("nvarchar(35)");
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("RecipeTime")
+                        .HasColumnType("float");
 
                     b.Property<int>("Servings")
                         .HasColumnType("int");
-
-                    b.Property<double>("Time")
-                        .HasColumnType("float");
 
                     b.HasKey("RecipeId");
 
@@ -277,9 +270,6 @@ namespace WhiskItUp.Data.Migrations
 
                     b.Property<int>("Gender")
                         .HasColumnType("int");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("YearsOfExp")
                         .HasColumnType("datetime2");

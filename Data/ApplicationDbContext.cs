@@ -10,8 +10,8 @@ namespace WhiskItUp.Data
             : base(options)
         {
         }
-        public DbSet<WhiskItUp.Models.Recipe> Recipe { get; set; } = default!;
-        public DbSet<WhiskItUp.Models.User> User { get; set; } = default!;
-        public DbSet<WhiskItUp.Models.UserRecipeMapping> UserRecipeMapping { get; set; } = default!;
+        public DbSet<Recipe> tblRecipe { get; set; } = default!;
+        public DbSet<User> tblUser { get; set; } = default!;
+        public DbSet<UserRecipeMapping> tblUserRecipeMapping { get; set; } = default!;
     }
 }
