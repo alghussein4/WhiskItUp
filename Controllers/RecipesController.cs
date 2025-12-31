@@ -36,7 +36,7 @@ namespace WhiskItUp.Controllers
             {
                 recipes = recipes.Where(r => r.Difficulty == difficulty);
             }
-
+            ViewBag.DifficultyList = new SelectList(Enum.GetValues(typeof(EDifficulty)));
             return View(await recipes.ToListAsync());
         }
 
