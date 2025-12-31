@@ -1,4 +1,5 @@
-﻿@model WhiskItUp.Models.User
+﻿@using WhiskItUp.Models
+@model WhiskItUp.Models.User
 
 @{
     ViewData["Title"] = "Create";
@@ -8,46 +9,64 @@
 
 <h4>User</h4>
 <hr />
+
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="Create" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
+
+            <!-- FullName -->
+            <div class="form-group mb-3">
                 <label asp-for="FullName" class="control-label"></label>
                 <input asp-for="FullName" class="form-control" />
                 <span asp-validation-for="FullName" class="text-danger"></span>
             </div>
-            <div class="form-group">
+
+            <!-- Email -->
+            <div class="form-group mb-3">
                 <label asp-for="Email" class="control-label"></label>
                 <input asp-for="Email" class="form-control" />
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
-            <div class="form-group">
+
+            <!-- ✅ Gender Dropdown (نفس طريقتك) -->
+            <div class="form-group mb-3">
                 <label asp-for="Gender" class="control-label"></label>
-                <select asp-for="Gender" class="form-control"></select>
+
+                <select asp-for="Gender"
+                        asp-items="@Html.GetEnumSelectList<EGender>()"
+                        class="form-control">
+                </select>
+
                 <span asp-validation-for="Gender" class="text-danger"></span>
             </div>
-            <div class="form-group">
+
+            <!-- YearsOfExp -->
+            <div class="form-group mb-3">
                 <label asp-for="YearsOfExp" class="control-label"></label>
-                <input asp-for="YearsOfExp" class="form-control" />
+                <input asp-for="YearsOfExp" class="form-control" type="date" />
                 <span asp-validation-for="YearsOfExp" class="text-danger"></span>
             </div>
-            <div class="form-group">
+
+            <!-- PhoneNumber -->
+            <div class="form-group mb-3">
                 <label asp-for="PhoneNumber" class="control-label"></label>
                 <input asp-for="PhoneNumber" class="form-control" />
                 <span asp-validation-for="PhoneNumber" class="text-danger"></span>
             </div>
+
+            <!-- Submit -->
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-secondary ms-2">Back to List</a>
             </div>
+
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
