@@ -23,7 +23,7 @@ namespace WhiskItUp.Controllers
         // Features:
         // - Search (FullName/Email/Phone)
         // - Filter by Gender
-        // - Sorting
+        // - Sorting (All Model Fields)
         // - Pagination
         public async Task<IActionResult> Index(
             string? search,
@@ -50,18 +50,64 @@ namespace WhiskItUp.Controllers
                 query = query.Where(u => u.Gender == gender.Value);
             }
 
-            // Sorting
-            ViewBag.CurrentSort = sortOrder;
-            ViewBag.SortByName = string.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
-            ViewBag.SortById = sortOrder == "id_asc" ? "id_desc" : "id_asc";
-
-            query = sortOrder switch
+            // ✅ Sorting (Switch مثل طريقتك)
+            if (string.IsNullOrWhiteSpace(sortOrder))
             {
-                "name_desc" => query.OrderByDescending(u => u.FullName),
-                "id_asc" => query.OrderBy(u => u.UserId),
-                "id_desc" => query.OrderByDescending(u => u.UserId),
-                _ => query.OrderBy(u => u.FullName)
-            };
+                sortOrder = "default"; // Default Sort
+            }
+
+            switch (sortOrder.ToLower().Trim())
+            {
+                case "name_asc":
+                    query = query.OrderBy(u => u.FullName);
+                    break;
+                case "name_desc":
+                    query = query.OrderByDescending(u => u.FullName);
+                    break;
+
+                case "email_asc":
+                    query = query.OrderBy(u => u.Email);
+                    break;
+                case "email_desc":
+                    query = query.OrderByDescending(u => u.Email);
+                    break;
+
+                case "gender_asc":
+                    query = query.OrderBy(u => u.Gender);
+                    break;
+                case "gender_desc":
+                    query = query.OrderByDescending(u => u.Gender);
+                    break;
+
+                case "exp_asc":
+                    query = query.OrderBy(u => u.YearsOfExp);
+                    break;
+                case "exp_desc":
+                    query = query.OrderByDescending(u => u.YearsOfExp);
+                    break;
+
+                case "phone_asc":
+                    query = query.OrderBy(u => u.PhoneNumber);
+                    break;
+                case "phone_desc":
+                    query = query.OrderByDescending(u => u.PhoneNumber);
+                    break;
+
+                case "id_asc":
+                    query = query.OrderBy(u => u.UserId);
+                    break;
+                case "id_desc":
+                    query = query.OrderByDescending(u => u.UserId);
+                    break;
+
+                default:
+                    // Default Sort: FullName ASC then UserId DESC
+                    query = query.OrderBy(u => u.FullName).ThenByDescending(u => u.UserId);
+                    break;
+            }
+
+            // ✅ نمرر السورت الحالي للـ View
+            ViewBag.CurrentSort = sortOrder;
 
             // Pagination
             if (page <= 0) page = 1;
@@ -174,7 +220,7 @@ namespace WhiskItUp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // ✅ GET: Users/Delete/5
+        // GET: Users/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -189,7 +235,7 @@ namespace WhiskItUp.Controllers
             return View(user);
         }
 
-        // ✅ POST: Users/Delete/5
+        // POST: Users/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
