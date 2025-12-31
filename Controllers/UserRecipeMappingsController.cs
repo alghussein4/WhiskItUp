@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Threading.Tasks;
 using WhiskItUp.Data;
 using WhiskItUp.Models;
-
 namespace WhiskItUp.Controllers
 {
     public class UserRecipeMappingsController : Controller
@@ -18,133 +15,109 @@ namespace WhiskItUp.Controllers
         {
             _context = context;
         }
-
         // GET: UserRecipeMappings
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortBy)
         {
-            var applicationDbContext = _context.tblUserRecipeMapping.Include(u => u.Recipe).Include(u => u.User);
-            return View(await applicationDbContext.ToListAsync());
-        }
+            var data = await _context.tblUserRecipeMapping
+                                     .Include(ur => ur.Recipe)
+                                     .Include(ur => ur.User)
+                                     .ToListAsync();
 
+            return View(data);
+        }
         // GET: UserRecipeMappings/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
-            var userRecipeMapping = await _context.tblUserRecipeMapping
-                .Include(u => u.Recipe)
-                .Include(u => u.User)
-                .FirstOrDefaultAsync(m => m.UserRecipeMappingId == id);
-            if (userRecipeMapping == null)
-            {
-                return NotFound();
-            }
+            var mapping = await _context.tblUserRecipeMapping
+                                        .Include(ur => ur.Recipe)
+                                        .Include(ur => ur.User)
+                                        .FirstOrDefaultAsync(m => m.UserRecipeMappingId == id);
 
-            return View(userRecipeMapping);
+            if (mapping == null) return NotFound();
+
+            return View(mapping);
         }
 
         // GET: UserRecipeMappings/Create
         public IActionResult Create()
         {
-            ViewData["RecipeId"] = new SelectList(_context.tblRecipe, "RecipeId", "RecipeId");
+            ViewData["RecipeId"] = new SelectList(_context.tblRecipe, "RecipeId", "RecipeName");
             ViewData["UserId"] = new SelectList(_context.tblUser, "UserId", "FullName");
             return View();
         }
 
         // POST: UserRecipeMappings/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("UserRecipeMappingId,UserId,RecipeId,Comment,Rating,Favorite")] UserRecipeMapping userRecipeMapping)
+        public async Task<IActionResult> Create([Bind("UserRecipeMappingId,UserId,RecipeId,Rating,Comment,Favorite")] UserRecipeMapping mapping)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(userRecipeMapping);
+                _context.Add(mapping);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["RecipeId"] = new SelectList(_context.tblRecipe, "RecipeId", "RecipeId", userRecipeMapping.RecipeId);
-            ViewData["UserId"] = new SelectList(_context.tblUser, "UserId", "FullName", userRecipeMapping.UserId);
-            return View(userRecipeMapping);
+
+            ViewData["RecipeId"] = new SelectList(_context.tblRecipe, "RecipeId", "RecipeName", mapping.RecipeId);
+            ViewData["UserId"] = new SelectList(_context.tblUser, "UserId", "FullName", mapping.UserId);
+            return View(mapping);
         }
 
         // GET: UserRecipeMappings/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
-            var userRecipeMapping = await _context.tblUserRecipeMapping.FindAsync(id);
-            if (userRecipeMapping == null)
-            {
-                return NotFound();
-            }
-            ViewData["RecipeId"] = new SelectList(_context.tblRecipe, "RecipeId", "RecipeId", userRecipeMapping.RecipeId);
-            ViewData["UserId"] = new SelectList(_context.tblUser, "UserId", "FullName", userRecipeMapping.UserId);
-            return View(userRecipeMapping);
+            var mapping = await _context.tblUserRecipeMapping.FindAsync(id);
+            if (mapping == null) return NotFound();
+
+            ViewData["RecipeId"] = new SelectList(_context.tblRecipe, "RecipeId", "RecipeName", mapping.RecipeId);
+            ViewData["UserId"] = new SelectList(_context.tblUser, "UserId", "FullName", mapping.UserId);
+            return View(mapping);
         }
 
         // POST: UserRecipeMappings/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("UserRecipeMappingId,UserId,RecipeId,Comment,Rating,Favorite")] UserRecipeMapping userRecipeMapping)
+        public async Task<IActionResult> Edit(int id, [Bind("UserRecipeMappingId,UserId,RecipeId,Rating,Comment,Favorite")] UserRecipeMapping mapping)
         {
-            if (id != userRecipeMapping.UserRecipeMappingId)
-            {
-                return NotFound();
-            }
+            if (id != mapping.UserRecipeMappingId) return NotFound();
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(userRecipeMapping);
+                    _context.Update(mapping);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!UserRecipeMappingExists(userRecipeMapping.UserRecipeMappingId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    if (!UserRecipeMappingExists(mapping.UserRecipeMappingId)) return NotFound();
+                    else throw;
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["RecipeId"] = new SelectList(_context.tblRecipe, "RecipeId", "RecipeId", userRecipeMapping.RecipeId);
-            ViewData["UserId"] = new SelectList(_context.tblUser, "UserId", "FullName", userRecipeMapping.UserId);
-            return View(userRecipeMapping);
+
+            ViewData["RecipeId"] = new SelectList(_context.tblRecipe, "RecipeId", "RecipeName", mapping.RecipeId);
+            ViewData["UserId"] = new SelectList(_context.tblUser, "UserId", "FullName", mapping.UserId);
+            return View(mapping);
         }
 
         // GET: UserRecipeMappings/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
-            var userRecipeMapping = await _context.tblUserRecipeMapping
-                .Include(u => u.Recipe)
-                .Include(u => u.User)
-                .FirstOrDefaultAsync(m => m.UserRecipeMappingId == id);
-            if (userRecipeMapping == null)
-            {
-                return NotFound();
-            }
+            var mapping = await _context.tblUserRecipeMapping
+                                        .Include(ur => ur.Recipe)
+                                        .Include(ur => ur.User)
+                                        .FirstOrDefaultAsync(m => m.UserRecipeMappingId == id);
 
-            return View(userRecipeMapping);
+            if (mapping == null) return NotFound();
+
+            return View(mapping);
         }
 
         // POST: UserRecipeMappings/Delete/5
@@ -152,13 +125,13 @@ namespace WhiskItUp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var userRecipeMapping = await _context.tblUserRecipeMapping.FindAsync(id);
-            if (userRecipeMapping != null)
+            var mapping = await _context.tblUserRecipeMapping.FindAsync(id);
+            if (mapping != null)
             {
-                _context.tblUserRecipeMapping.Remove(userRecipeMapping);
+                _context.tblUserRecipeMapping.Remove(mapping);
+                await _context.SaveChangesAsync();
             }
 
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
