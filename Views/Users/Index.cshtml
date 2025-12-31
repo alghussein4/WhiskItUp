@@ -47,13 +47,13 @@
     </a>
 </div>
 
-<!-- ✅ Search + Filter Card -->
+
 <div class="card shadow-sm mb-4">
     <div class="card-body">
         <form method="get" asp-action="Index">
             <div class="row g-2 align-items-center">
 
-                <!-- Search -->
+                
                 <div class="col-md-6">
                     <input type="text"
                            name="search"
@@ -62,7 +62,6 @@
                            placeholder="Search by name, email, phone..." />
                 </div>
 
-                <!-- Gender Filter -->
                 <div class="col-md-3">
                     <select name="gender" class="form-select">
                         <option value="">All Genders</option>
@@ -71,7 +70,6 @@
                     </select>
                 </div>
 
-                <!-- Buttons -->
                 <div class="col-md-3 d-flex gap-2 justify-content-end">
                     <button type="submit" class="btn btn-primary w-50">Search</button>
                     <a asp-action="Index" class="btn btn-outline-secondary w-50">Reset</a>
@@ -81,7 +79,7 @@
     </div>
 </div>
 
-<!-- ✅ Table -->
+
 <div class="card shadow-sm">
     <div class="card-body p-0">
         <div class="table-responsive">
@@ -113,7 +111,8 @@
                             </a>
                         </th>
 
-                        <th style="width:180px;" class="text-end pe-3">Actions</th>
+                 
+                        <th style="width:260px;" class="text-end pe-3">Actions</th>
                     </tr>
                 </thead>
 
@@ -138,10 +137,13 @@
                                 <td>@item.PhoneNumber</td>
                                 <td class="text-center">@item.UserId</td>
 
-                                <td class="text-end pe-3">
-                                    <a asp-action="Edit" asp-route-id="@item.UserId" class="btn btn-sm btn-outline-primary">Edit</a>
-                                    <a asp-action="Details" asp-route-id="@item.UserId" class="btn btn-sm btn-outline-info">Details</a>
-                                    <a asp-action="Delete" asp-route-id="@item.UserId" class="btn btn-sm btn-outline-danger">Delete</a>
+                           
+                                <td class="pe-3">
+                                    <div class="d-flex justify-content-end gap-2 flex-nowrap">
+                                        <a asp-action="Edit" asp-route-id="@item.UserId" class="btn btn-sm btn-outline-primary">Edit</a>
+                                        <a asp-action="Details" asp-route-id="@item.UserId" class="btn btn-sm btn-outline-info">Details</a>
+                                        <a asp-action="Delete" asp-route-id="@item.UserId" class="btn btn-sm btn-outline-danger">Delete</a>
+                                    </div>
                                 </td>
                             </tr>
                         }
@@ -152,7 +154,6 @@
     </div>
 </div>
 
-<!-- ✅ Pagination -->
 @if (totalPages > 1)
 {
     <div class="d-flex justify-content-between align-items-center mt-3">

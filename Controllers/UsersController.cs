@@ -19,9 +19,6 @@ namespace WhiskItUp.Controllers
             _context = context;
         }
 
-
-
-
         // GET: Users
         // Features:
         // - Search (FullName/Email/Phone)
@@ -95,7 +92,7 @@ namespace WhiskItUp.Controllers
                 return NotFound();
 
             var user = await _context.tblUser
-                .Include(u => u.UserRecipeMappings) // لو موجودة ومرتبطة
+                .Include(u => u.UserRecipeMappings)
                 .FirstOrDefaultAsync(m => m.UserId == id);
 
             if (user == null)
@@ -115,7 +112,7 @@ namespace WhiskItUp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("UserId,FullName,Email,Gender,YearsOfExp,PhoneNumber")] User user)
         {
-            // Validation منطقي: منع تاريخ مستقبل
+            // Validation: منع تاريخ مستقبل
             if (user.YearsOfExp > DateTime.Today)
             {
                 ModelState.AddModelError("YearsOfExp", "Years Of Experience date cannot be in the future.");
@@ -153,7 +150,6 @@ namespace WhiskItUp.Controllers
             if (id != user.UserId)
                 return NotFound();
 
-
             if (user.YearsOfExp > DateTime.Today)
             {
                 ModelState.AddModelError("YearsOfExp", "Years Of Experience date cannot be in the future.");
@@ -177,10 +173,41 @@ namespace WhiskItUp.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+
+        // ✅ GET: Users/Delete/5
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+                return NotFound();
+
+            var user = await _context.tblUser
+                .FirstOrDefaultAsync(m => m.UserId == id);
+
+            if (user == null)
+                return NotFound();
+
+            return View(user);
+        }
+
+        // ✅ POST: Users/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var user = await _context.tblUser.FindAsync(id);
+
+            if (user != null)
+            {
+                _context.tblUser.Remove(user);
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
         private bool UserExists(int id)
         {
             return _context.tblUser.Any(e => e.UserId == id);
         }
-
     }
 }
