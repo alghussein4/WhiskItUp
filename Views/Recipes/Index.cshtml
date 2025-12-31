@@ -1,71 +1,65 @@
 ﻿@model IEnumerable<WhiskItUp.Models.Recipe>
+@using WhiskItUp.Models; 
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Recipe Index";
 }
 
-<h1>Index</h1>
+<h1>Recipe Index</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-primary">Create New</a>
 </p>
-<table class="table">
+
+<form asp-action="Index" method="get" class="mb-4 p-3 border rounded bg-light">
+    <div class="row">
+        <div class="col-md-4">
+            <label class="control-label">Search Name</label>
+            <input type="text" name="searchString" class="form-control" placeholder="Enter recipe name..." />
+        </div>
+        <div class="col-md-4">
+            <label class="control-label">Difficulty</label>
+            <select name="difficulty" class="form-control" asp-items="ViewBag.DifficultyList">
+                <option value="">-- All Levels --</option>
+            </select>
+        </div>
+        <div class="col-md-4 d-flex align-items-end">
+            <button type="submit" class="btn btn-success me-2">Filter</button>
+            <a asp-action="Index" class="btn btn-secondary">Reset</a>
+        </div>
+    </div>
+</form>
+
+<table class="table table-striped">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.RecipeName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Time)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Servings)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Difficulty)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsVegetarian)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Calories)
-            </th>
+            <th>@Html.DisplayNameFor(model => model.RecipeName)</th>
+            <th>@Html.DisplayNameFor(model => model.Description)</th>
+            <th>@Html.DisplayNameFor(model => model.Time)</th>
+            <th>@Html.DisplayNameFor(model => model.Servings)</th>
+            <th>@Html.DisplayNameFor(model => model.Difficulty)</th>
+            <th>@Html.DisplayNameFor(model => model.IsVegetarian)</th>
+            <th>@Html.DisplayNameFor(model => model.Calories)</th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.RecipeName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Time)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Servings)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Difficulty)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsVegetarian)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Calories)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.RecipeId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.RecipeId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.RecipeId">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.RecipeName)</td>
+                <td>@Html.DisplayFor(modelItem => item.Description)</td>
+                <td>@Html.DisplayFor(modelItem => item.Time) (mins)</td>
+                <td>@Html.DisplayFor(modelItem => item.Servings)</td>
+                <td>@Html.DisplayFor(modelItem => item.Difficulty)</td>
+                <td>@Html.DisplayFor(modelItem => item.IsVegetarian)</td>
+                <td>@Html.DisplayFor(modelItem => item.Calories)</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.RecipeId">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.RecipeId">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.RecipeId">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
