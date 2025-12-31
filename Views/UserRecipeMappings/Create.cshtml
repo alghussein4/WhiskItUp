@@ -1,41 +1,47 @@
 ﻿@model WhiskItUp.Models.UserRecipeMapping
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Create UserRecipeMapping";
 }
 
 <h1>Create</h1>
 
-<h4>UserRecipeMapping</h4>
+<h4>User Recipe Mapping</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
             <div class="form-group">
                 <label asp-for="UserId" class="control-label"></label>
-                <select asp-for="UserId" class ="form-control" asp-items="ViewBag.UserId"></select>
+                <select asp-for="UserId" class="form-control" asp-items="ViewBag.UserId"></select>
             </div>
+
             <div class="form-group">
                 <label asp-for="RecipeId" class="control-label"></label>
-                <select asp-for="RecipeId" class ="form-control" asp-items="ViewBag.RecipeId"></select>
+                <select asp-for="RecipeId" class="form-control" asp-items="ViewBag.RecipeId"></select>
             </div>
-            <div class="form-group">
-                <label asp-for="Comment" class="control-label"></label>
-                <input asp-for="Comment" class="form-control" />
-                <span asp-validation-for="Comment" class="text-danger"></span>
-            </div>
+
             <div class="form-group">
                 <label asp-for="Rating" class="control-label"></label>
                 <input asp-for="Rating" class="form-control" />
                 <span asp-validation-for="Rating" class="text-danger"></span>
             </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Favorite" /> @Html.DisplayNameFor(model => model.Favorite)
-                </label>
-            </div>
+
             <div class="form-group">
+                <label asp-for="Comment" class="control-label"></label>
+                <input asp-for="Comment" class="form-control" />
+                <span asp-validation-for="Comment" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Favorite" class="control-label"></label>
+                <input asp-for="Favorite" type="checkbox" class="form-check-input" />
+                <span asp-validation-for="Favorite" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-2">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
@@ -47,5 +53,7 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

@@ -1,13 +1,15 @@
 ﻿@model WhiskItUp.Models.User
 
+
 @{
-    ViewData["Title"] = "Details";
+    double totaltime = ViewBag.Totaltime;
+    double countrecipe = ViewBag.countrecipe;
 }
 
-<h1>Details</h1>
+<h1>@ViewData["Title"]</h1>
 
 <div>
-    <h4>User</h4>
+    <h4>deatiles</h4>
     <hr />
 
     <dl class="row">
@@ -52,3 +54,61 @@
     <a asp-action="Edit" asp-route-id="@Model?.UserId">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>
+
+<hr />
+
+<div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    <label asp-for="@(Model!.UserRecipeMappings!.FirstOrDefault()!.Recipe!.RecipeName)"></label>
+                </th>
+                <th>
+                    <label asp-for="@(Model!.UserRecipeMappings!.FirstOrDefault()!.Recipe!.Description)"></label>
+                </th>
+                <th>
+                    <label asp-for="@(Model!.UserRecipeMappings!.FirstOrDefault()!.Recipe!.RecipeName)"></label>
+                </th>
+                <th>
+                    <label asp-for="@(Model!.UserRecipeMappings!.FirstOrDefault()!.Recipe!.IsVegetarian)"></label>
+                </th>
+                <th>
+                    <label asp-for="@(Model!.UserRecipeMappings!.FirstOrDefault()!.Recipe!.Calories)"></label>
+                </th>
+                <th>
+                    <label asp-for="@(Model!.UserRecipeMappings!.FirstOrDefault()!.Recipe!.Difficulty)"></label>
+                </th>
+                <th>
+                    <label asp-for="@(Model!.UserRecipeMappings!.FirstOrDefault()!.Recipe!.Time)"></label>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model!.UserRecipeMappings!)
+            {
+                <tr>
+                    <td>@item.Recipe!.RecipeName</td>
+                    <td>@item.Recipe!.Description</td>
+                    <td>@item.Recipe!.RecipeName</td>
+                    <td>@item.Recipe!.Calories</td>
+                    <td>@item.Recipe!.Difficulty</td>
+                    <td>@item.Recipe!.IsVegetarian</td>
+                    <td>@item.Recipe!.Time</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div class="card border-primary mb-3" style="max-width: 20rem;">
+        <div class="card-header">summary</div>
+        <div class="card-body">
+            <h4 class="card-title">Total number of recipes</h4>
+            <p class="card-text">@(countrecipe)</p>
+            <h4 class="card-title">Total time </h4>
+            <p class="card-text">@(totaltime)</p>
+        </div>
+    </div>
+
+
+
+
