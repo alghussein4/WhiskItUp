@@ -137,12 +137,19 @@ namespace WhiskItUp.Controllers
             if (id == null)
                 return NotFound();
 
+            // 1. We must Include Mappings AND ThenInclude the actual Recipes to get the Time
             var user = await _context.tblUser
-                .Include(u => u.UserRecipeMappings)
+                .Include(u => u.UserRecipeMappings)!
+                    .ThenInclude(m => m.Recipe)
                 .FirstOrDefaultAsync(m => m.UserId == id);
 
             if (user == null)
                 return NotFound();
+
+            // 2. Calculate the data for your Summary Card
+            // Matches your professor's style of doing math in the Controller
+            ViewBag.countrecipe = user.UserRecipeMappings?.Count() ?? 0;
+            ViewBag.Totaltime = user.UserRecipeMappings?.Sum(m => m.Recipe?.Time ?? 0) ?? 0;
 
             return View(user);
         }
@@ -158,7 +165,7 @@ namespace WhiskItUp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("UserId,FullName,Email,Gender,YearsOfExp,PhoneNumber")] User user)
         {
-            // Validation: منع تاريخ مستقبل
+            
             if (user.YearsOfExp > DateTime.Today)
             {
                 ModelState.AddModelError("YearsOfExp", "Years Of Experience date cannot be in the future.");
