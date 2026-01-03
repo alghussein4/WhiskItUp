@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
@@ -7,10 +8,10 @@ using WhiskItUp.Data;
 using WhiskItUp.Models;
 namespace WhiskItUp.Controllers
 {
+   // [Authorize]
     public class UserRecipeMappingsController : Controller
     {
         private readonly ApplicationDbContext _context;
-
         public UserRecipeMappingsController(ApplicationDbContext context)
         {
             _context = context;
@@ -39,16 +40,19 @@ namespace WhiskItUp.Controllers
 
             return View(mapping);
         }
-
         // GET: UserRecipeMappings/Create
+        //[Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
+           
             ViewData["RecipeId"] = new SelectList(_context.tblRecipe, "RecipeId", "RecipeName");
             ViewData["UserId"] = new SelectList(_context.tblUser, "UserId", "FullName");
             return View();
+           
         }
 
         // POST: UserRecipeMappings/Create
+       // [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("UserRecipeMappingId,UserId,RecipeId,Rating,Comment,Favorite")] UserRecipeMapping mapping)
@@ -64,21 +68,31 @@ namespace WhiskItUp.Controllers
             ViewData["UserId"] = new SelectList(_context.tblUser, "UserId", "FullName", mapping.UserId);
             return View(mapping);
         }
-
         // GET: UserRecipeMappings/Edit/5
+      
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null) return NotFound();
+            string userName = (User.Identity?.Name is null) ? "Guest" : User.Identity?.Name!;
+            if (userName.Contains("admin", StringComparison.OrdinalIgnoreCase))
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            if (id == null)
+                return NotFound();
 
             var mapping = await _context.tblUserRecipeMapping.FindAsync(id);
-            if (mapping == null) return NotFound();
+            if (mapping == null)
+                return NotFound();
 
             ViewData["RecipeId"] = new SelectList(_context.tblRecipe, "RecipeId", "RecipeName", mapping.RecipeId);
             ViewData["UserId"] = new SelectList(_context.tblUser, "UserId", "FullName", mapping.UserId);
             return View(mapping);
+            
         }
 
         // POST: UserRecipeMappings/Edit/5
+       // [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("UserRecipeMappingId,UserId,RecipeId,Rating,Comment,Favorite")] UserRecipeMapping mapping)
@@ -104,7 +118,7 @@ namespace WhiskItUp.Controllers
             ViewData["UserId"] = new SelectList(_context.tblUser, "UserId", "FullName", mapping.UserId);
             return View(mapping);
         }
-
+       // [Authorize(Roles = "Admin")]
         // GET: UserRecipeMappings/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -121,6 +135,7 @@ namespace WhiskItUp.Controllers
         }
 
         // POST: UserRecipeMappings/Delete/5
+       // [Authorize(Roles = "Admin")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -134,7 +149,6 @@ namespace WhiskItUp.Controllers
 
             return RedirectToAction(nameof(Index));
         }
-
         private bool UserRecipeMappingExists(int id)
         {
             return _context.tblUserRecipeMapping.Any(e => e.UserRecipeMappingId == id);

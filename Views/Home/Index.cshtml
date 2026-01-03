@@ -2,7 +2,46 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<style>
+    .home-bg {
+        background-image: url('/images/chef-food.jpg');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        min-height: 100vh;
+        /* نضيف تدرج لوني نصف شفاف فوق الصورة لتسهيل قراءة النص */
+        position: relative;
+        color: white;
+    }
+
+        .home-bg::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4); /* تدرج أسود نصف شفاف */
+            z-index: 0;
+        }
+
+    .home-bg-content {
+        position: relative;
+        z-index: 1; /* النص فوق التدرج */
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        text-align: center;
+    }
+</style>
+
+<div class="home-bg">
+    <div class="home-bg-content">
+        <h1 class="display-4">Welcome</h1>
+        <p>
+            Learn about <a href="https://learn.microsoft.com/aspnet/core" style="color: #fff; text-decoration: underline;">building Web apps with ASP.NET Core</a>.
+        </p>
+    </div>
 </div>

@@ -2,14 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WhiskItUp.Data;
 using WhiskItUp.Models;
+using WhiskItUp.Models.ModelView;
+
 
 namespace WhiskItUp.Controllers
 {
+    //[Authorize]
     public class UsersController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -132,27 +136,35 @@ namespace WhiskItUp.Controllers
         }
 
         // GET: Users/Details/5
+        // GET: Users/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            ViewData["Title"] = "User Recipes (Master Details)";
+
             if (id == null)
                 return NotFound();
 
-            // 1. We must Include Mappings AND ThenInclude the actual Recipes to get the Time
             var user = await _context.tblUser
-                .Include(u => u.UserRecipeMappings)!
-                    .ThenInclude(m => m.Recipe)
-                .FirstOrDefaultAsync(m => m.UserId == id);
+                .Include(u => u.UserRecipeMappings)
+                    .ThenInclude(ur => ur.Recipe)
+                .FirstOrDefaultAsync(u => u.UserId == id);
 
             if (user == null)
                 return NotFound();
 
-            // 2. Calculate the data for your Summary Card
-            // Matches your professor's style of doing math in the Controller
-            ViewBag.countrecipe = user.UserRecipeMappings?.Count() ?? 0;
-            ViewBag.Totaltime = user.UserRecipeMappings?.Sum(m => m.Recipe?.Time ?? 0) ?? 0;
+            ViewData["countrecipe"] = 0;
+            ViewData["Totaltime"] = 0;
+
+            if (user.UserRecipeMappings != null && user.UserRecipeMappings.Any())
+            {
+                ViewData["countrecipe"] = user.UserRecipeMappings.Count();
+
+                ViewData["Totaltime"] = user.UserRecipeMappings!.Sum(r => r.Recipe!.Time);
+            }
 
             return View(user);
         }
+
 
         // GET: Users/Create
         public IActionResult Create()
@@ -261,6 +273,41 @@ namespace WhiskItUp.Controllers
         private bool UserExists(int id)
         {
             return _context.tblUser.Any(e => e.UserId == id);
+        }
+       
+        public IActionResult GetuserrecipeReport()
+        {
+            ViewData["Title"] = "User Recipes Report";
+            var model = new UserRecipesReport();
+
+            return View(model);
+        }
+
+        // POST: Users/GetuserrecipeReport
+        [HttpPost]
+        public IActionResult GetuserrecipeReport(UserRecipesReport model)
+        {
+            ViewData["Title"] = "user recipes Report";
+            if (model is null)
+                return NotFound();
+
+            if (model.UserId > 0)
+                model.users = _context.tblUser
+                                         .Include(s => s.UserRecipeMappings)!
+                                         .ThenInclude(r => r.Recipe)
+                                         .Where(s => s.UserId == model.UserId);
+
+            else if (model.Email is not null && model.Email.Length > 0)
+                model.users = _context.tblUser
+                                         .Include(s => s.UserRecipeMappings)!
+                                         .ThenInclude(r => r.Recipe)
+                                         .Where(s => s.Email.Contains(model.Email));
+            else
+                model.users = _context.tblUser
+                                        .Include(s => s.UserRecipeMappings)!
+                                        .ThenInclude(r => r.Recipe)
+                                        .Where(s => s.Gender == model.Gender);
+            return View(model);
         }
     }
 }
