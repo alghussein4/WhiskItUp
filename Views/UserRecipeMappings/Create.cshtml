@@ -1,4 +1,7 @@
 ﻿@model WhiskItUp.Models.UserRecipeMapping
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
 
 @{
     ViewData["Title"] = "Create UserRecipeMapping";
@@ -11,6 +14,8 @@
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
+            @Html.AntiForgeryToken()  <!-- Anti-Forgery Token تم إضافته هنا -->
+
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
             <div class="form-group">

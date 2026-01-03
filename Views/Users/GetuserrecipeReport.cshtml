@@ -1,0 +1,72 @@
+﻿@model WhiskItUp.Models.ModelView.UserRecipesReport
+<h1>@ViewData["Title"]</h1>
+<hr />
+<!-- SEARCH FORM -->
+<div class="mb-4">
+   <h3>Find By:</h3>
+    <form method="post" class="row g-3">
+        <div class="col-md-4">
+            <label asp-for="UserId" class="form-label">User ID</label>
+            <input asp-for="UserId" class="form-control" />
+        </div>
+        <div class="col-md-4">
+            <label asp-for="Email" class="form-label">Email</label>
+            <input asp-for="Email" class="form-control" />
+        </div>
+        <div class="col-md-4">
+            <label asp-for="Gender" class="form-label">Gender</label>
+            <select asp-for="Gender" asp-items="@Html.GetEnumSelectList<EGender>()" class="form-select">
+                <option value="">--Select Gender--</option>
+            </select>
+        </div>
+        <div class="col-12">
+            <button type="submit" class="btn btn-primary">Find</button>
+        </div>
+    </form>
+</div>
+
+<!-- SEARCH RESULTS -->
+@if (Model.users != null && Model.users.Count() > 0)
+{
+    <h3>Results</h3>
+    <hr />
+    <div class="row">
+        @foreach (var user in Model.users)
+        {
+            <div class="col-md-6 mb-3">
+                <div class="card shadow-sm p-3">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            @user.FullName (@user.Email)
+                        </h5>
+                        <p class="card-text text-success">
+                            Recipes: @(user.UserRecipeMappings?.Count() ?? 0) |
+                            Total Time: @(user.UserRecipeMappings?.Sum(r => r.Recipe?.Time ?? 0) ?? 0) min |
+                            Avg Rating: @(user.UserRecipeMappings?.Any() == true
+                                                ? user.UserRecipeMappings.Average(r => r.Rating).ToString("0.0")
+                                                : "N/A")
+                </p>
+
+                @if (user.UserRecipeMappings != null && user.UserRecipeMappings.Any())
+                        {
+                            <ul class="list-group list-group-flush">
+                                @foreach (var ur in user.UserRecipeMappings)
+                                {
+                                    <li class="list-group-item p-1">
+                                        <strong>@ur.Recipe.RecipeName</strong> -
+                                        @ur.Recipe.Time min | Rating: @ur.Rating
+                                                | Comment: @ur.Comment                       
+                                    </li>
+                                }
+                            </ul>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+else if (Model.users != null)
+{
+    <p class="text-muted">No users found for the search criteria.</p>
+}
