@@ -1,64 +1,103 @@
 ﻿@model WhiskItUp.Models.ModelView.UserRecipesReport
+
+@{
+    ViewData["Title"] = "User Recipes Report";
+}
+
 <h1>@ViewData["Title"]</h1>
 <hr />
-<!-- SEARCH FORM -->
-<div class="mb-4">
-   <h3>Find By:</h3>
-    <form method="post" class="row g-3">
-        <div class="col-md-4">
-            <label asp-for="UserId" class="form-label">User ID</label>
-            <input asp-for="UserId" class="form-control" />
-        </div>
-        <div class="col-md-4">
-            <label asp-for="Email" class="form-label">Email</label>
-            <input asp-for="Email" class="form-control" />
-        </div>
-        <div class="col-md-4">
-            <label asp-for="Gender" class="form-label">Gender</label>
-            <select asp-for="Gender" asp-items="@Html.GetEnumSelectList<EGender>()" class="form-select">
-                <option value="">--Select Gender--</option>
-            </select>
-        </div>
-        <div class="col-12">
-            <button type="submit" class="btn btn-primary">Find</button>
-        </div>
-    </form>
+
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <h3 class="card-title h5">Find By:</h3>
+        <form method="post" class="row g-3">
+            <div class="col-md-4">
+                <label asp-for="UserId" class="form-label">User ID</label>
+                <input asp-for="UserId" class="form-control" placeholder="Enter ID..." />
+            </div>
+            <div class="col-md-4">
+                <label asp-for="Email" class="form-label">Email</label>
+                <input asp-for="Email" class="form-control" placeholder="Enter Email..." />
+            </div>
+            <div class="col-md-4">
+                <label asp-for="Gender" class="form-label">Gender</label>
+                <select asp-for="Gender" asp-items="@Html.GetEnumSelectList<EGender>()" class="form-select">
+                    <option value="">--Select Gender--</option>
+                </select>
+            </div>
+            <div class="col-12">
+                <button type="submit" class="btn btn-primary px-4">Generate Report</button>
+                <a asp-action="GetuserrecipeReport" class="btn btn-outline-secondary">Clear</a>
+            </div>
+        </form>
+    </div>
 </div>
 
-<!-- SEARCH RESULTS -->
-@if (Model.users != null && Model.users.Count() > 0)
+@if (Model.users != null && Model.users.Any())
 {
-    <h3>Results</h3>
+    <div class="card bg-light mb-4 border-0 shadow-sm">
+        <div class="card-body">
+            <h4 class="card-title text-primary h5"><i class="bi bi-graph-up"></i> Report Highlights</h4>
+            <div class="row text-center mt-3">
+                <div class="col-md-4 border-end">
+                    <p class="mb-0 text-muted">Total Users Found</p>
+                    <p class="h4 fw-bold">@Model.users.Count()</p>
+                </div>
+                <div class="col-md-4 border-end">
+                    <p class="mb-0 text-muted">Total Recipes Whisked</p>
+                    <p class="h4 fw-bold">@Model.users.Sum(u => u.UserRecipeMappings?.Count() ?? 0)</p>
+                </div>
+                <div class="col-md-4">
+                    <p class="mb-0 text-muted">Avg Community Rating</p>
+                    <p class="h4 fw-bold text-warning">
+                        @(Model.users.Any(u => u.UserRecipeMappings?.Any() ?? false)
+                                            ? Model.users.SelectMany(u => u.UserRecipeMappings!).Average(r => r.Rating).ToString("0.0")
+                                            : "0.0") ⭐
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <h3>Detailed Results</h3>
     <hr />
     <div class="row">
-        @foreach (var user in Model.users)
+    @foreach (var user in Model.users)
         {
-            <div class="col-md-6 mb-3">
-                <div class="card shadow-sm p-3">
+            <div class="col-md-6 mb-4">
+                <div class="card h-100 shadow-sm border-start border-primary border-4">
                     <div class="card-body">
-                        <h5 class="card-title">
-                            @user.FullName (@user.Email)
+                        <h5 class="card-title fw-bold">
+                            @user.FullName
                         </h5>
-                        <p class="card-text text-success">
-                            Recipes: @(user.UserRecipeMappings?.Count() ?? 0) |
-                            Total Time: @(user.UserRecipeMappings?.Sum(r => r.Recipe?.Time ?? 0) ?? 0) min |
-                            Avg Rating: @(user.UserRecipeMappings?.Any() == true
-                                                ? user.UserRecipeMappings.Average(r => r.Rating).ToString("0.0")
-                                                : "N/A")
-                </p>
+                        <h6 class="card-subtitle mb-2 text-muted">@user.Email</h6>
 
-                @if (user.UserRecipeMappings != null && user.UserRecipeMappings.Any())
+                        <div class="d-flex gap-3 mb-3 small py-2 border-top border-bottom">
+                            <span><strong>Recipes:</strong> @(user.UserRecipeMappings?.Count() ?? 0)</span>
+                            <span><strong>Total Time:</strong> @(user.UserRecipeMappings?.Sum(r => r.Recipe?.Time ?? 0) ?? 0) min</span>
+                        </div>
+
+                        @if (user.UserRecipeMappings != null && user.UserRecipeMappings.Any())
                         {
-                            <ul class="list-group list-group-flush">
+                            <p class="fw-bold small mb-1">Recipe List:</p>
+                            <ul class="list-group list-group-flush border">
                                 @foreach (var ur in user.UserRecipeMappings)
                                 {
-                                    <li class="list-group-item p-1">
-                                        <strong>@ur.Recipe.RecipeName</strong> -
-                                        @ur.Recipe.Time min | Rating: @ur.Rating
-                                                | Comment: @ur.Comment                       
+                                    <li class="list-group-item bg-transparent">
+                                        <div class="d-flex justify-content-between align-items-start">
+                                            <div class="ms-2 me-auto">
+                                                <div class="fw-bold">@ur.Recipe?.RecipeName</div>
+                                                <small class="text-muted italic">"@ur.Comment"</small>
+                                            </div>
+                                            <span class="badge bg-warning text-dark rounded-pill">@ur.Rating ⭐</span>
+                                        </div>
                                     </li>
                                 }
                             </ul>
+                        }
+                        else
+                        {
+                            <p class="text-muted small italic">No recipes whisked up by this user yet.</p>
                         }
                     </div>
                 </div>
@@ -68,5 +107,7 @@
 }
 else if (Model.users != null)
 {
-    <p class="text-muted">No users found for the search criteria.</p>
+    <div class="alert alert-info">
+        <i class="bi bi-info-circle me-2"></i> No users found matching your search criteria.
+    </div>
 }
