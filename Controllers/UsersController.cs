@@ -1,11 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using WhiskItUp.Data;
 using WhiskItUp.Models;
 using WhiskItUp.Models.ModelView;
@@ -285,6 +287,7 @@ namespace WhiskItUp.Controllers
 
         // POST: Users/GetuserrecipeReport
         [HttpPost]
+    
         public IActionResult GetuserrecipeReport(UserRecipesReport model)
         {
             ViewData["Title"] = "user recipes Report";
