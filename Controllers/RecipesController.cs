@@ -39,9 +39,6 @@ namespace WhiskItUp.Controllers
             return View(await recipes.ToListAsync());
         }
 
-        // ==========================================
-        // UPDATED DETAILS METHOD START
-        // ==========================================
         // GET: Recipes/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -50,10 +47,7 @@ namespace WhiskItUp.Controllers
                 return NotFound();
             }
 
-            // This logic uses Eager Loading to fetch the Users who liked this recipe
             var recipe = await _context.tblRecipe
-                .Include(r => r.UserRecipeMappings)!        // Include the bridge table
-                    .ThenInclude(ur => ur.User)             // Follow the bridge to the User table
                 .FirstOrDefaultAsync(m => m.RecipeId == id);
 
             if (recipe == null)
@@ -63,9 +57,6 @@ namespace WhiskItUp.Controllers
 
             return View(recipe);
         }
-        // ==========================================
-        // UPDATED DETAILS METHOD END
-        // ==========================================
 
         // GET: Recipes/Create
         public IActionResult Create()
@@ -73,6 +64,7 @@ namespace WhiskItUp.Controllers
             return View();
         }
 
+        // POST: Recipes/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("RecipeId,RecipeName,Description,Time,Servings,Difficulty,IsVegetarian,Calories")] Recipe recipe)
@@ -86,21 +78,31 @@ namespace WhiskItUp.Controllers
             return View(recipe);
         }
 
+        // GET: Recipes/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null) return NotFound();
+            if (id == null)
+            {
+                return NotFound();
+            }
 
             var recipe = await _context.tblRecipe.FindAsync(id);
-            if (recipe == null) return NotFound();
-
+            if (recipe == null)
+            {
+                return NotFound();
+            }
             return View(recipe);
         }
 
+        // POST: Recipes/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("RecipeId,RecipeName,Description,Time,Servings,Difficulty,IsVegetarian,Calories")] Recipe recipe)
         {
-            if (id != recipe.RecipeId) return NotFound();
+            if (id != recipe.RecipeId)
+            {
+                return NotFound();
+            }
 
             if (ModelState.IsValid)
             {
@@ -111,26 +113,40 @@ namespace WhiskItUp.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!RecipeExists(recipe.RecipeId)) return NotFound();
-                    else throw;
+                    if (!RecipeExists(recipe.RecipeId))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
                 }
                 return RedirectToAction(nameof(Index));
             }
             return View(recipe);
         }
 
+        // GET: Recipes/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null) return NotFound();
+            if (id == null)
+            {
+                return NotFound();
+            }
 
             var recipe = await _context.tblRecipe
                 .FirstOrDefaultAsync(m => m.RecipeId == id);
 
-            if (recipe == null) return NotFound();
+            if (recipe == null)
+            {
+                return NotFound();
+            }
 
             return View(recipe);
         }
 
+        // POST: Recipes/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
