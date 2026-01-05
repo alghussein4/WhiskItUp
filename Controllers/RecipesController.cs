@@ -11,6 +11,7 @@ using WhiskItUp.Models;
 
 namespace WhiskItUp.Controllers
 {
+    [Authorize]
     public class RecipesController : Controller
     {
         private readonly ApplicationDbContext _context;

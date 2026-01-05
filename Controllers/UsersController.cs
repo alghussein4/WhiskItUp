@@ -13,7 +13,7 @@ using WhiskItUp.Models.ModelView;
 
 namespace WhiskItUp.Controllers
 {
-    //[Authorize]
+    [Authorize]
     public class UsersController : Controller
     {
         private readonly ApplicationDbContext _context;
