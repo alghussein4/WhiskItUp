@@ -69,6 +69,8 @@ namespace WhiskItUp.Controllers
 
             if (user == null) return NotFound();
 
+            ViewBag.countrecipe = user.UserRecipeMappings?.Count() ?? 0;
+            ViewBag.totaltime = user.UserRecipeMappings?.Sum(urm => urm.Recipe?.Time ?? 0) ?? 0;
             return View(user);
         }
 
@@ -156,8 +158,8 @@ namespace WhiskItUp.Controllers
             if (model == null) return NotFound();
             var query = _context.tblUser.Include(s => s.UserRecipeMappings)!.ThenInclude(r => r.Recipe).AsQueryable();
 
-            if (model.UserId > 0) query = query.Where(s => s.UserId == model.UserId);
-            else if (!string.IsNullOrEmpty(model.Email)) query = query.Where(s => s.Email.Contains(model.Email));
+           
+            if (!string.IsNullOrEmpty(model.Email)) query = query.Where(s => s.Email.Contains(model.Email));
             else query = query.Where(s => s.Gender == model.Gender);
 
             model.users = query.ToList();

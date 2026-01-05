@@ -1,60 +1,82 @@
 ﻿@model IEnumerable<WhiskItUp.Models.UserRecipeMapping>
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "User Recipe Mappings";
 }
 
-<h1>Index</h1>
+<style>
+    .table td, .table th {
+        vertical-align: middle;
+    }
 
-<p>
-    <a asp-controller="UserRecipeMappings" asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Comment)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Rating)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Favorite)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.User)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Recipe)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
+    th {
+        white-space: nowrap;
+    }
+
+    .action-btns a {
+        margin-right: 5px;
+    }
+</style>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="mb-0">User Recipe Mappings</h1>
+        <p class="text-muted">Manage user comments, ratings, favorites, and recipe assignments.</p>
+    </div>
+
+    <a asp-action="Create" class="btn btn-success">
+        <i class="bi bi-plus-lg"></i> Create New
+    </a>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-striped table-hover border">
+        <thead>
             <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Comment)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Rating)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Favorite)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.User.FullName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Recipe.RecipeId)
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.UserRecipeMappingId">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.UserRecipeMappingId">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.UserRecipeMappingId">Delete</a>
-                </td>
+                <th>@Html.DisplayNameFor(model => model.Comment)</th>
+                <th>@Html.DisplayNameFor(model => model.Rating)</th>
+                <th>@Html.DisplayNameFor(model => model.Favorite)</th>
+                <th>@Html.DisplayNameFor(model => model.User)</th>
+                <th>@Html.DisplayNameFor(model => model.Recipe)</th>
+                <th class="text-center">Actions</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @if (!Model.Any())
+            {
+                <tr>
+                    <td colspan="6" class="text-center py-5 text-muted">No records found.</td>
+                </tr>
+            }
+            else
+            {
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.Comment</td>
+                        <td>@item.Rating</td>
+                        <td>@item.Favorite</td>
+                        <td>@item.User.FullName</td>
+                        <td>@item.Recipe.RecipeId</td>
+                        <td class="text-center action-btns">
+                            @if (SignInManager.IsSignedIn(User) &&
+                                                User.Identity.Name.Contains("admin", StringComparison.OrdinalIgnoreCase))
+                            {
+                                <a asp-action="Edit" asp-route-id="@item.UserRecipeMappingId" class="btn btn-sm btn-outline-primary">Edit</a>
+                            }
+                            <a asp-action="Details" asp-route-id="@item.UserRecipeMappingId" class="btn btn-sm btn-outline-info">Details</a>
+                            @if (SignInManager.IsSignedIn(User) &&
+                                                User.Identity.Name.Contains("admin", StringComparison.OrdinalIgnoreCase))
+                            {
+                                <a asp-action="Delete" asp-route-id="@item.UserRecipeMappingId" class="btn btn-sm btn-outline-danger">Delete</a>
+                            }
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
