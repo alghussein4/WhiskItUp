@@ -1,5 +1,9 @@
 ﻿@model IEnumerable<WhiskItUp.Models.Recipe>
 @using WhiskItUp.Models; 
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
 
 @{
     ViewData["Title"] = "Recipe Index";
@@ -8,9 +12,12 @@
 <h1>Recipe Index</h1>
 
 <p>
-    <a asp-action="Create" class="btn btn-primary">Create New</a>
+    @if (SignInManager.IsSignedIn(User) &&
+        User.Identity.Name.Contains("admin", StringComparison.OrdinalIgnoreCase))
+    {
+        <a asp-action="Create">Create New</a>
+    }
 </p>
-
 <form asp-action="Index" method="get" class="mb-4 p-3 border rounded bg-light">
     <div class="row">
         <div class="col-md-4">
