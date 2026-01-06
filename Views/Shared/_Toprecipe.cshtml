@@ -1,0 +1,35 @@
+﻿@model IEnumerable<WhiskItUp.Models.ViewModels.TopRatedRecipeVM>
+
+<style>
+    /* عنوان الـ Partial */
+    .top-rated-title {
+        color: black; /* خلي اللون أسود */
+        text-shadow: 1px 1px 2px white; /* ظل خفيف ليظهر فوق أي خلفية */
+    }
+
+    /* نصوص البطاقات */
+    .top-rated-card h5 {
+        font-weight: bold;
+        color: #333; /* نص داكن للبطاقات */
+    }
+
+    .top-rated-card p {
+        color: #555; /* نص رمادي للتقييم */
+    }
+</style>
+
+<h3 class="mb-4 top-rated-title">🔥 Top Rated Recipes</h3>
+
+<div class="row">
+    @foreach (var item in Model)
+    {
+        <div class="col-md-4">
+            <div class="card shadow-sm mb-3 text-center top-rated-card">
+                <div class="card-body">
+                    <h5>@item.RecipeName</h5>
+                    <p>⭐ @item.AvgRating.ToString("0.0")</p>
+                </div>
+            </div>
+        </div>
+    }
+</div>
