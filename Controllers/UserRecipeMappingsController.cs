@@ -46,7 +46,7 @@ namespace WhiskItUp.Controllers
 
             return View(mapping);
         }
-
+        [Authorize(Roles = "Admin")]
         // GET: UserRecipeMappings/Create
         public IActionResult Create()
         {
