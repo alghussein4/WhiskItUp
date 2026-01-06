@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WhiskItUp.Models
 {
+    [Table("tblRecipe", Schema = "food")]
     public class Recipe
     {
         public int RecipeId { get; set; }

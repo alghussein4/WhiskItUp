@@ -21,6 +21,7 @@ namespace WhiskItUp.Controllers
             _context = context;
         }
 
+        [Route("Recipes/List")]
         // GET: Recipes
         public async Task<IActionResult> Index(string searchString, EDifficulty? difficulty)
         {
@@ -40,6 +41,7 @@ namespace WhiskItUp.Controllers
         }
 
         // GET: Recipes/Details/5
+        [Route("[Controller]/[Action]/{id:int}")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)

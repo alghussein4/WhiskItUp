@@ -3,8 +3,6 @@
 @{
     ViewData["Title"] = "Users";
 
-    var currentSearch = ViewBag.Search as string;
-    var currentGender = ViewBag.Gender;
     var currentSort = ViewBag.CurrentSort as string;
 
     int currentPage = ViewBag.Page != null ? Convert.ToInt32(ViewBag.Page) : 1;
@@ -45,45 +43,17 @@
     </a>
 </div>
 
-<div class="card mb-4">
-    <div class="card-body">
-        <form method="get" asp-action="Index">
-            <div class="row g-3 align-items-center">
-                <div class="col-md-6">
-                    <input type="text"
-                           name="search"
-                           value="@currentSearch"
-                           class="form-control"
-                           placeholder="Search by name, email, or phone..." />
-                </div>
-
-                <div class="col-md-3">
-                    <select name="gender" class="form-select">
-                        <option value="">All Genders</option>
-                        <option value="male" selected="@(currentGender?.ToString() == "male")">Male</option>
-                        <option value="female" selected="@(currentGender?.ToString() == "female")">Female</option>
-                    </select>
-                </div>
-
-                <div class="col-md-3 d-flex gap-2">
-                    <button type="submit" class="btn btn-primary flex-grow-1">Search</button>
-                    <a asp-action="Index" class="btn btn-outline-secondary flex-grow-1">Reset</a>
-                </div>
-            </div>
-        </form>
-    </div>
-</div>
 
 <div class="table-responsive">
     <table class="table table-striped table-hover border">
         <thead>
             <tr>
                 <th class="ps-3">
-                    <a class="sort-btn" asp-action="Index" asp-route-sortOrder="name_asc" asp-route-search="@currentSearch" asp-route-gender="@currentGender">
+                    <a class="sort-btn" asp-action="Index" asp-route-sortOrder="name_asc">
                         <i class="bi bi-arrow-up"></i>
                     </a>
                     <span class="sort-title">@Html.DisplayNameFor(model => model.FullName)</span>
-                    <a class="sort-btn" asp-action="Index" asp-route-sortOrder="name_desc" asp-route-search="@currentSearch" asp-route-gender="@currentGender">
+                    <a class="sort-btn" asp-action="Index" asp-route-sortOrder="name_desc">
                         <i class="bi bi-arrow-down"></i>
                     </a>
                 </th>
@@ -132,18 +102,18 @@
         <nav>
             <ul class="pagination mb-0">
                 <li class="page-item @(currentPage == 1 ? "disabled" : "")">
-                    <a class="page-link" asp-action="Index" asp-route-page="@(currentPage - 1)" asp-route-search="@currentSearch" asp-route-gender="@currentGender" asp-route-sortOrder="@currentSort">Previous</a>
+                    <a class="page-link" asp-action="Index" asp-route-page="@(currentPage - 1)" asp-route-sortOrder="@currentSort">Previous</a>
                 </li>
 
                 @for (int i = 1; i <= totalPages; i++)
                 {
                     <li class="page-item @(i == currentPage ? "active" : "")">
-                        <a class="page-link" asp-action="Index" asp-route-page="@i" asp-route-search="@currentSearch" asp-route-gender="@currentGender" asp-route-sortOrder="@currentSort">@i</a>
+                        <a class="page-link" asp-action="Index" asp-route-page="@i" asp-route-sortOrder="@currentSort">@i</a>
                     </li>
                 }
 
                 <li class="page-item @(currentPage == totalPages ? "disabled" : "")">
-                    <a class="page-link" asp-action="Index" asp-route-page="@(currentPage + 1)" asp-route-search="@currentSearch" asp-route-gender="@currentGender" asp-route-sortOrder="@currentSort">Next</a>
+                    <a class="page-link" asp-action="Index" asp-route-page="@(currentPage + 1)" asp-route-sortOrder="@currentSort">Next</a>
                 </li>
             </ul>
         </nav>
