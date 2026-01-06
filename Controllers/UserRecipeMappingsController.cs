@@ -60,7 +60,6 @@ namespace WhiskItUp.Controllers
 
         // POST: UserRecipeMappings/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("UserRecipeMappingId,UserId,RecipeId,Rating,Comment,Favorite")] UserRecipeMapping mapping)
         {
             if (ModelState.IsValid)
@@ -94,40 +93,39 @@ namespace WhiskItUp.Controllers
 
         // POST: UserRecipeMappings/Edit/5
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("UserRecipeMappingId,UserId,RecipeId,Rating,Comment,Favorite")] UserRecipeMapping mapping)
+ 
+        public async Task<IActionResult> Edit(int id, UserRecipeMapping mapping)
         {
             if (id != mapping.UserRecipeMappingId)
-            {
                 return NotFound();
+
+            if (!ModelState.IsValid)
+            {
+                ViewData["UserId"] = new SelectList(_context.Users, "Id", "UserName", mapping.UserId);
+                ViewData["RecipeId"] = new SelectList(_context.tblRecipe, "RecipeId", "RecipeName", mapping.RecipeId);
+                return View(mapping);
             }
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(mapping);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!UserRecipeMappingExists(mapping.UserRecipeMappingId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["RecipeId"] = new SelectList(_context.tblRecipe, "RecipeId", "RecipeName", mapping.RecipeId);
-            ViewData["UserId"] = new SelectList(_context.tblUser, "UserId", "FullName", mapping.UserId);
-            return View(mapping);
+            var entity = await _context.tblUserRecipeMapping.FindAsync(id);
+
+            if (entity == null)
+                return NotFound();
+
+            // 👇 التحديث الصحيح
+            entity.UserId = mapping.UserId;
+            entity.RecipeId = mapping.RecipeId;
+            entity.Rating = mapping.Rating;
+            entity.Comment = mapping.Comment;
+            entity.Favorite = mapping.Favorite;
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
         }
 
+
         // GET: UserRecipeMappings/Delete/5
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
