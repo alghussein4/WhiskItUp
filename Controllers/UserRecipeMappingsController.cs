@@ -2,11 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using System.Threading.Tasks;
 using WhiskItUp.Data;
 using WhiskItUp.Models;
-
 namespace WhiskItUp.Controllers
 {
     [Authorize]
@@ -93,37 +90,33 @@ namespace WhiskItUp.Controllers
 
         // POST: UserRecipeMappings/Edit/5
         [HttpPost]
- 
-        public async Task<IActionResult> Edit(int id, UserRecipeMapping mapping)
+        public async Task<IActionResult> Edit(int id, [Bind("UserRecipeMappingId,UserId,RecipeId,Rating,Comment,Favorite")] UserRecipeMapping mapping)
         {
             if (id != mapping.UserRecipeMappingId)
                 return NotFound();
 
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                ViewData["UserId"] = new SelectList(_context.Users, "Id", "UserName", mapping.UserId);
-                ViewData["RecipeId"] = new SelectList(_context.tblRecipe, "RecipeId", "RecipeName", mapping.RecipeId);
-                return View(mapping);
+                try
+                {
+
+                    _context.Update(mapping);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!_context.tblUserRecipeMapping.Any(e => e.UserRecipeMappingId == mapping.UserRecipeMappingId))
+                        return NotFound();
+                    else
+                        throw;
+                }
+                return RedirectToAction(nameof(Index));
             }
 
-            var entity = await _context.tblUserRecipeMapping.FindAsync(id);
-
-            if (entity == null)
-                return NotFound();
-
-            // 👇 التحديث الصحيح
-            entity.UserId = mapping.UserId;
-            entity.RecipeId = mapping.RecipeId;
-            entity.Rating = mapping.Rating;
-            entity.Comment = mapping.Comment;
-            entity.Favorite = mapping.Favorite;
-
-            await _context.SaveChangesAsync();
-
-            return RedirectToAction(nameof(Index));
+            ViewData["UserId"] = new SelectList(_context.tblUser, "UserId", "FullName", mapping.UserId);
+            ViewData["RecipeId"] = new SelectList(_context.tblRecipe, "RecipeId", "RecipeName", mapping.RecipeId);
+            return View(mapping);
         }
-
-
         // GET: UserRecipeMappings/Delete/5
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int? id)
