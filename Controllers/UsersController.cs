@@ -1,11 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using WhiskItUp.Data;
 using WhiskItUp.Models;
 using WhiskItUp.Models.ModelView;
@@ -15,7 +10,7 @@ namespace WhiskItUp.Controllers
     [Authorize]
     public class UsersController : Controller
     {
-        // Added 'default!' to fix the "is not null" / "uninitialized" error
+        
         private readonly ApplicationDbContext _context = default!;
 
         public UsersController(ApplicationDbContext context)
@@ -24,7 +19,7 @@ namespace WhiskItUp.Controllers
         }
 
         // GET: Users
-        public async Task<IActionResult> Index( EGender? gender, string? sortOrder, int page = 1, int pageSize = 10)
+        public async Task<IActionResult> Index(EGender? gender, string? sortOrder, int page = 1, int pageSize = 10)
         {
             var query = _context.tblUser.AsQueryable();
 
@@ -123,7 +118,7 @@ namespace WhiskItUp.Controllers
         }
 
         [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
+       
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var user = await _context.tblUser.FindAsync(id);
@@ -143,15 +138,26 @@ namespace WhiskItUp.Controllers
         [HttpPost]
         public IActionResult GetuserrecipeReport(UserRecipesReport model)
         {
-            if (model == null) return NotFound();
-            var query = _context.tblUser.Include(s => s.UserRecipeMappings)!.ThenInclude(r => r.Recipe).AsQueryable();
+            {
+
+                if (model is null)
+                    return NotFound();
 
 
-            if (!string.IsNullOrEmpty(model.Email)) query = query.Where(s => s.Email.Contains(model.Email));
-            else query = query.Where(s => s.Gender == model.Gender);
 
-            model.users = query.ToList();
-            return View(model);
+                if (model.Email is not null && model.Email.Length > 0)
+                    model.users = _context.tblUser
+                                             .Include(s => s.UserRecipeMappings)!
+                                             .ThenInclude(r => r.Recipe)
+                                             .Where(s => s.Email.Contains(model.Email));
+                else
+                    model.users = _context.tblUser
+                                            .Include(s => s.UserRecipeMappings)!
+                                            .ThenInclude(r => r.Recipe)
+                                            .Where(s => s.Gender == model.Gender);
+                return View(model);
+            }
         }
     }
 }
+

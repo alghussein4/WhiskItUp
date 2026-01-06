@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WhiskItUp.Data;
 
@@ -11,9 +12,11 @@ using WhiskItUp.Data;
 namespace WhiskItUp.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260106171250_ReapplySeedData")]
+    partial class ReapplySeedData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -261,47 +264,47 @@ namespace WhiskItUp.Data.Migrations
                     b.HasData(
                         new
                         {
-                            RecipeId = 101,
-                            Calories = 300,
-                            Description = "Fluffy banana breakfast pancakes",
+                            RecipeId = 1,
+                            Calories = 350,
+                            Description = "Fluffy breakfast pancakes",
                             Difficulty = 0,
                             IsVegetarian = true,
-                            RecipeName = "Banana Pancakes",
-                            Servings = 2,
-                            Time = 25.0
+                            RecipeName = "Pancakes",
+                            Servings = 4,
+                            Time = 20.0
                         },
                         new
                         {
-                            RecipeId = 102,
-                            Calories = 600,
-                            Description = "Creamy spaghetti with bacon",
+                            RecipeId = 2,
+                            Calories = 650,
+                            Description = "Creamy pasta with grilled chicken",
                             Difficulty = 1,
                             IsVegetarian = false,
-                            RecipeName = "Spaghetti Carbonara",
-                            Servings = 4,
-                            Time = 40.0
+                            RecipeName = "Chicken Alfredo",
+                            Servings = 3,
+                            Time = 45.0
                         },
                         new
                         {
-                            RecipeId = 103,
-                            Calories = 180,
-                            Description = "Fresh and healthy tomato soup",
+                            RecipeId = 3,
+                            Calories = 200,
+                            Description = "Healthy mixed vegetable soup",
                             Difficulty = 0,
                             IsVegetarian = true,
-                            RecipeName = "Tomato Soup",
-                            Servings = 3,
-                            Time = 35.0
+                            RecipeName = "Vegetable Soup",
+                            Servings = 5,
+                            Time = 30.0
                         },
                         new
                         {
-                            RecipeId = 104,
-                            Calories = 500,
-                            Description = "Tangy lemon dessert",
+                            RecipeId = 4,
+                            Calories = 450,
+                            Description = "Rich chocolate dessert",
                             Difficulty = 2,
                             IsVegetarian = true,
-                            RecipeName = "Lemon Cheesecake",
-                            Servings = 6,
-                            Time = 80.0
+                            RecipeName = "Chocolate Cake",
+                            Servings = 8,
+                            Time = 90.0
                         });
                 });
 
@@ -337,21 +340,21 @@ namespace WhiskItUp.Data.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = 101,
-                            Email = "clara@example.com",
-                            FullName = "Clara Evans",
+                            UserId = 1,
+                            Email = "alice@example.com",
+                            FullName = "Alice Johnson Smith",
                             Gender = 0,
-                            PhoneNumber = "5551112222",
-                            YearsOfExp = new DateTime(2016, 2, 15, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            PhoneNumber = "1234567890",
+                            YearsOfExp = new DateTime(2015, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
-                            UserId = 102,
-                            Email = "david@example.com",
-                            FullName = "David Miller",
+                            UserId = 2,
+                            Email = "bob@example.com",
+                            FullName = "Bob Alexander Brown",
                             Gender = 1,
-                            PhoneNumber = "5553334444",
-                            YearsOfExp = new DateTime(2013, 7, 10, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            PhoneNumber = "0987654321",
+                            YearsOfExp = new DateTime(2012, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
                 });
 
@@ -390,39 +393,39 @@ namespace WhiskItUp.Data.Migrations
                     b.HasData(
                         new
                         {
-                            UserRecipeMappingId = 101,
-                            Comment = "Perfect banana pancakes!",
+                            UserRecipeMappingId = 1,
+                            Comment = "Delicious and easy to make!",
                             Favorite = true,
                             Rating = 5.0,
-                            RecipeId = 101,
-                            UserId = 101
+                            RecipeId = 1,
+                            UserId = 1
                         },
                         new
                         {
-                            UserRecipeMappingId = 102,
-                            Comment = "Tomato soup is very tasty.",
+                            UserRecipeMappingId = 2,
+                            Comment = "Healthy and tasty soup.",
                             Favorite = false,
                             Rating = 4.0,
-                            RecipeId = 103,
-                            UserId = 101
+                            RecipeId = 3,
+                            UserId = 1
                         },
                         new
                         {
-                            UserRecipeMappingId = 103,
-                            Comment = "Carbonara was amazing.",
+                            UserRecipeMappingId = 3,
+                            Comment = "Creamy pasta, kids loved it.",
                             Favorite = true,
                             Rating = 4.5,
-                            RecipeId = 102,
-                            UserId = 102
+                            RecipeId = 2,
+                            UserId = 2
                         },
                         new
                         {
-                            UserRecipeMappingId = 104,
-                            Comment = "Lemon cheesecake is delicious.",
+                            UserRecipeMappingId = 4,
+                            Comment = "Rich chocolate cake, perfect dessert.",
                             Favorite = false,
                             Rating = 5.0,
-                            RecipeId = 104,
-                            UserId = 102
+                            RecipeId = 4,
+                            UserId = 2
                         });
                 });
 

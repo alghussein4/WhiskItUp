@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -79,7 +76,7 @@ namespace WhiskItUp.Controllers
 
         
         [HttpPost]
-        [ValidateAntiForgeryToken]
+       
         public async Task<IActionResult> Create([Bind("RecipeId,RecipeName,Description,Time,Servings,Difficulty,IsVegetarian,Calories")] Recipe recipe)
         {
             if (ModelState.IsValid)
@@ -109,7 +106,7 @@ namespace WhiskItUp.Controllers
 
         
         [HttpPost]
-        [ValidateAntiForgeryToken]
+       
         public async Task<IActionResult> Edit(int id, [Bind("RecipeId,RecipeName,Description,Time,Servings,Difficulty,IsVegetarian,Calories")] Recipe recipe)
         {
             if (id != recipe.RecipeId)
@@ -161,7 +158,7 @@ namespace WhiskItUp.Controllers
 
         
         [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
+       
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var recipe = await _context.tblRecipe.FindAsync(id);

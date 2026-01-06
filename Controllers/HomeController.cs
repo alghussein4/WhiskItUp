@@ -18,26 +18,23 @@ namespace WhiskItUp.Controllers
             _logger = logger;
             _context = context;
         }
-
         public async Task<IActionResult> Index()
         {
-            // ???? ???? 3 ????? ??? ????? ???????
+
             var topRecipes = await _context.tblUserRecipeMapping
          .Include(x => x.Recipe)
          .GroupBy(x => x.Recipe)
          .Select(g => new TopRatedRecipeVM
          {
-             RecipeName = g.Key.RecipeName,  // ????? ?? Recipe
-             AvgRating = g.Average(x => x.Rating) // ??????? ?? UserRecipeMapping.Rating
+             RecipeName = g.Key.RecipeName,  
+             AvgRating = g.Average(x => x.Rating) 
          })
          .OrderByDescending(x => x.AvgRating)
          .Take(3)
          .ToListAsync();
 
-            return View(topRecipes); // ?????? ??? View
+            return View(topRecipes); 
         }
-
-
         [Authorize]
         public IActionResult Privacy()
         {
@@ -51,3 +48,4 @@ namespace WhiskItUp.Controllers
         }
     }
 }
+

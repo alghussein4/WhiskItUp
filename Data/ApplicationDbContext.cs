@@ -23,27 +23,28 @@ namespace WhiskItUp.Data
         {
             base.OnModelCreating(builder);
 
-            // --- Seed Recipes ---
+            // --- Seed Recipes --- (IDs جديدة وأسماء مختلفة)
             builder.Entity<Recipe>().HasData(
-                new Recipe { RecipeId = 1, RecipeName = "Pancakes", Description = "Fluffy breakfast pancakes", Time = 20, Servings = 4, Difficulty = EDifficulty.Easy, IsVegetarian = true, Calories = 350 },
-                new Recipe { RecipeId = 2, RecipeName = "Chicken Alfredo", Description = "Creamy pasta with grilled chicken", Time = 45, Servings = 3, Difficulty = EDifficulty.Medium, IsVegetarian = false, Calories = 650 },
-                new Recipe { RecipeId = 3, RecipeName = "Vegetable Soup", Description = "Healthy mixed vegetable soup", Time = 30, Servings = 5, Difficulty = EDifficulty.Easy, IsVegetarian = true, Calories = 200 },
-                new Recipe { RecipeId = 4, RecipeName = "Chocolate Cake", Description = "Rich chocolate dessert", Time = 90, Servings = 8, Difficulty = EDifficulty.Hard, IsVegetarian = true, Calories = 450 }
+                new Recipe { RecipeId = 101, RecipeName = "Banana Pancakes", Description = "Fluffy banana breakfast pancakes", Time = 25, Servings = 2, Difficulty = EDifficulty.Easy, IsVegetarian = true, Calories = 300 },
+                new Recipe { RecipeId = 102, RecipeName = "Spaghetti Carbonara", Description = "Creamy spaghetti with bacon", Time = 40, Servings = 4, Difficulty = EDifficulty.Medium, IsVegetarian = false, Calories = 600 },
+                new Recipe { RecipeId = 103, RecipeName = "Tomato Soup", Description = "Fresh and healthy tomato soup", Time = 35, Servings = 3, Difficulty = EDifficulty.Easy, IsVegetarian = true, Calories = 180 },
+                new Recipe { RecipeId = 104, RecipeName = "Lemon Cheesecake", Description = "Tangy lemon dessert", Time = 80, Servings = 6, Difficulty = EDifficulty.Hard, IsVegetarian = true, Calories = 500 }
             );
 
-            // --- Seed Users ---
+            // --- Seed Users --- (IDs وأسماء جديدة)
             builder.Entity<User>().HasData(
-                new User { UserId = 1, FullName = "Alice Johnson Smith", Email = "alice@example.com", Gender = EGender.female, YearsOfExp = new DateTime(2015, 1, 1), PhoneNumber = "1234567890" },
-                new User { UserId = 2, FullName = "Bob Alexander Brown", Email = "bob@example.com", Gender = EGender.male, YearsOfExp = new DateTime(2012, 5, 1), PhoneNumber = "0987654321" }
+                new User { UserId = 101, FullName = "Clara Evans", Email = "clara@example.com", Gender = EGender.female, YearsOfExp = new DateTime(2016, 2, 15), PhoneNumber = "5551112222" },
+                new User { UserId = 102, FullName = "David Miller", Email = "david@example.com", Gender = EGender.male, YearsOfExp = new DateTime(2013, 7, 10), PhoneNumber = "5553334444" }
             );
 
-            // --- Seed UserRecipeMapping ---
+            // --- Seed UserRecipeMapping --- (IDs جديدة وتربط البيانات الجديدة)
             builder.Entity<UserRecipeMapping>().HasData(
-                new UserRecipeMapping { UserRecipeMappingId = 1, UserId = 1, RecipeId = 1, Comment = "Delicious and easy to make!", Rating = 5, Favorite = true },
-                new UserRecipeMapping { UserRecipeMappingId = 2, UserId = 1, RecipeId = 3, Comment = "Healthy and tasty soup.", Rating = 4, Favorite = false },
-                new UserRecipeMapping { UserRecipeMappingId = 3, UserId = 2, RecipeId = 2, Comment = "Creamy pasta, kids loved it.", Rating = 4.5, Favorite = true },
-                new UserRecipeMapping { UserRecipeMappingId = 4, UserId = 2, RecipeId = 4, Comment = "Rich chocolate cake, perfect dessert.", Rating = 5, Favorite = false }
+                new UserRecipeMapping { UserRecipeMappingId = 101, UserId = 101, RecipeId = 101, Comment = "Perfect banana pancakes!", Rating = 5, Favorite = true },
+                new UserRecipeMapping { UserRecipeMappingId = 102, UserId = 101, RecipeId = 103, Comment = "Tomato soup is very tasty.", Rating = 4, Favorite = false },
+                new UserRecipeMapping { UserRecipeMappingId = 103, UserId = 102, RecipeId = 102, Comment = "Carbonara was amazing.", Rating = 4.5, Favorite = true },
+                new UserRecipeMapping { UserRecipeMappingId = 104, UserId = 102, RecipeId = 104, Comment = "Lemon cheesecake is delicious.", Rating = 5, Favorite = false }
             );
         }
+
     }
 }
