@@ -29,13 +29,25 @@ namespace WhiskItUp.Controllers
 
             if (!string.IsNullOrEmpty(searchString))
             {
-                recipes = recipes.Where(s => s.RecipeName!.Contains(searchString));
+                // LEARNING LOGIC: Custom "Smart Search"
+                // If the user types "fast", we filter by time (under 30 mins) instead of name
+                if (searchString.ToLower() == "fast")
+                {
+                    recipes = recipes.Where(r => r.Time <= 30);
+                }
+                else
+                {
+                    // Standard search by name
+                    recipes = recipes.Where(s => s.RecipeName!.Contains(searchString));
+                }
             }
 
             if (difficulty.HasValue)
             {
                 recipes = recipes.Where(r => r.Difficulty == difficulty);
             }
+
+            ViewBag.CurrentFilter = searchString; // To keep the text in the search box
             ViewBag.DifficultyList = new SelectList(Enum.GetValues(typeof(EDifficulty)));
             return View(await recipes.ToListAsync());
         }
