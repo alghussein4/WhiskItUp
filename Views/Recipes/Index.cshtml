@@ -37,11 +37,13 @@
     }
 </div>
 
+@* Updated Form with Smart Search Hint *@
 <form asp-action="Index" method="get" class="mb-4 p-3 border rounded bg-light">
     <div class="row">
         <div class="col-md-4">
             <label class="control-label">Search Name</label>
-            <input type="text" name="searchString" class="form-control" placeholder="Enter recipe name..." />
+            <input type="text" name="searchString" value="@ViewBag.CurrentFilter"
+                   class="form-control" placeholder="Search name... (Try 'fast' for < 30m)" />
         </div>
         <div class="col-md-4">
             <label class="control-label">Difficulty</label>
@@ -82,17 +84,40 @@
                 @foreach (var item in Model)
                 {
                     <tr>
-                        <td>@Html.DisplayFor(modelItem => item.RecipeName)</td>
-                        <td>@Html.DisplayFor(modelItem => item.Description)</td>
-                        <td>@Html.DisplayFor(modelItem => item.Time) (mins)</td>
+                        <td><strong>@Html.DisplayFor(modelItem => item.RecipeName)</strong></td>
+                        <td class="text-truncate" style="max-width: 200px;">@Html.DisplayFor(modelItem => item.Description)</td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Time) mins
+                            @* LEARNING LOGIC: Dynamic Time Category *@
+                            <div class="small fw-normal">
+                                @{
+                                    if (item.Time <= 20)
+                                    {
+                                        <span class="text-success">⏱️ Quick Fix</span>
+                                    }
+                                    else if (item.Time <= 60)
+                                    {
+
+                                        <span class="text-primary">🍳 Standard</span>
+                                    }
+                                    else
+                                    {
+
+                                        <span class="text-danger">🥧 Slow Cook</span>
+                                    }
+                                }
+                            </div>
+                        </td>
                         <td>@Html.DisplayFor(modelItem => item.Servings)</td>
                         <td>@Html.DisplayFor(modelItem => item.Difficulty)</td>
-                        <td>@Html.DisplayFor(modelItem => item.IsVegetarian)</td>
-                        <td>@Html.DisplayFor(modelItem => item.Calories)</td>
+                        <td>@(item.IsVegetarian ? "🌿 Yes" : "No")</td>
+                        <td>@Html.DisplayFor(modelItem => item.Calories) kcal</td>
                         <td class="text-center action-btns">
-                            <a asp-action="Edit" asp-route-id="@item.RecipeId" class="btn btn-sm btn-outline-primary">Edit</a>
-                            <a asp-action="Details" asp-route-id="@item.RecipeId" class="btn btn-sm btn-outline-info">Details</a>
-                            <a asp-action="Delete" asp-route-id="@item.RecipeId" class="btn btn-sm btn-outline-danger">Delete</a>
+                            <div class="d-flex justify-content-center">
+                                <a asp-action="Edit" asp-route-id="@item.RecipeId" class="btn btn-sm btn-outline-primary">Edit</a>
+                                <a asp-action="Details" asp-route-id="@item.RecipeId" class="btn btn-sm btn-outline-info">Details</a>
+                                <a asp-action="Delete" asp-route-id="@item.RecipeId" class="btn btn-sm btn-outline-danger">Delete</a>
+                            </div>
                         </td>
                     </tr>
                 }
