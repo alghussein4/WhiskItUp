@@ -22,22 +22,21 @@ namespace WhiskItUp.Controllers
         }
 
         [Route("Recipes/List")]
-        // GET: Recipes
+        
         public async Task<IActionResult> Index(string searchString, EDifficulty? difficulty)
         {
             var recipes = _context.tblRecipe.AsQueryable();
 
             if (!string.IsNullOrEmpty(searchString))
             {
-                // LEARNING LOGIC: Custom "Smart Search"
-                // If the user types "fast", we filter by time (under 30 mins) instead of name
+                //
                 if (searchString.ToLower() == "fast")
                 {
                     recipes = recipes.Where(r => r.Time <= 30);
                 }
                 else
                 {
-                    // Standard search by name
+                    
                     recipes = recipes.Where(s => s.RecipeName!.Contains(searchString));
                 }
             }
@@ -47,12 +46,12 @@ namespace WhiskItUp.Controllers
                 recipes = recipes.Where(r => r.Difficulty == difficulty);
             }
 
-            ViewBag.CurrentFilter = searchString; // To keep the text in the search box
+            ViewBag.CurrentFilter = searchString; 
             ViewBag.DifficultyList = new SelectList(Enum.GetValues(typeof(EDifficulty)));
             return View(await recipes.ToListAsync());
         }
 
-        // GET: Recipes/Details/5
+        
         [Route("[Controller]/[Action]/{id:int}")]
         public async Task<IActionResult> Details(int? id)
         {
@@ -72,13 +71,13 @@ namespace WhiskItUp.Controllers
             return View(recipe);
         }
 
-        // GET: Recipes/Create
+        
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Recipes/Create
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("RecipeId,RecipeName,Description,Time,Servings,Difficulty,IsVegetarian,Calories")] Recipe recipe)
@@ -92,7 +91,7 @@ namespace WhiskItUp.Controllers
             return View(recipe);
         }
 
-        // GET: Recipes/Edit/5
+        
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -108,7 +107,7 @@ namespace WhiskItUp.Controllers
             return View(recipe);
         }
 
-        // POST: Recipes/Edit/5
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("RecipeId,RecipeName,Description,Time,Servings,Difficulty,IsVegetarian,Calories")] Recipe recipe)
@@ -141,7 +140,7 @@ namespace WhiskItUp.Controllers
             return View(recipe);
         }
 
-        // GET: Recipes/Delete/5
+        
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -160,7 +159,7 @@ namespace WhiskItUp.Controllers
             return View(recipe);
         }
 
-        // POST: Recipes/Delete/5
+        
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
