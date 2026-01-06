@@ -24,22 +24,10 @@ namespace WhiskItUp.Controllers
         }
 
         // GET: Users
-        public async Task<IActionResult> Index(string? search, EGender? gender, string? sortOrder, int page = 1, int pageSize = 10)
+        public async Task<IActionResult> Index( EGender? gender, string? sortOrder, int page = 1, int pageSize = 10)
         {
             var query = _context.tblUser.AsQueryable();
 
-            if (!string.IsNullOrWhiteSpace(search))
-            {
-                search = search.Trim();
-                query = query.Where(u => u.FullName.Contains(search) ||
-                         (u.Email != null && u.Email.Contains(search)) ||
-                         (u.PhoneNumber != null && u.PhoneNumber.Contains(search)));
-            }
-
-            if (gender.HasValue)
-            {
-                query = query.Where(u => u.Gender == gender.Value);
-            }
 
             switch (sortOrder?.ToLower().Trim())
             {
@@ -158,7 +146,7 @@ namespace WhiskItUp.Controllers
             if (model == null) return NotFound();
             var query = _context.tblUser.Include(s => s.UserRecipeMappings)!.ThenInclude(r => r.Recipe).AsQueryable();
 
-           
+
             if (!string.IsNullOrEmpty(model.Email)) query = query.Where(s => s.Email.Contains(model.Email));
             else query = query.Where(s => s.Gender == model.Gender);
 
