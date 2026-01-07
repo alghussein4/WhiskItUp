@@ -23,7 +23,7 @@
             </div>
             <div class="col-12">
                 <button type="submit" class="btn btn-primary px-4">Generate Report</button>
-                <a asp-action="GetuserrecipeReport" class="btn btn-outline-secondary">Clear</a>
+              
             </div>
         </form>
     </div>
@@ -43,19 +43,14 @@
                     <p class="mb-0 text-muted">Total Recipes Whisked</p>
                     <p class="h4 fw-bold">@Model.users.Sum(u => u.UserRecipeMappings?.Count() ?? 0)</p>
                 </div>
-                <div class="col-md-4">
-                    <p class="mb-0 text-muted">Avg Community Rating</p>
-                    <p class="h4 fw-bold text-warning">
-                        @(Model.users.Any(u => u.UserRecipeMappings?.Any() ?? false)
-                                            ? Model.users.SelectMany(u => u.UserRecipeMappings!).Average(r => r.Rating).ToString("0.0")
-                                            : "0.0") ⭐
-                </p>
+               
+                
             </div>
         </div>
     </div>
-</div>
 
-    <h3>Detailed Results</h3>
+
+    <h3> Report Results</h3>
     <hr />
     <div class="row">
     @foreach (var user in Model.users)

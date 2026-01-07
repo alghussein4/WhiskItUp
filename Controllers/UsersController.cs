@@ -1,16 +1,15 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using WhiskItUp.Data;
 using WhiskItUp.Models;
 using WhiskItUp.Models.ModelView;
-
 namespace WhiskItUp.Controllers
 {
     [Authorize]
     public class UsersController : Controller
-    {
-        
+    {  
         private readonly ApplicationDbContext _context = default!;
 
         public UsersController(ApplicationDbContext context)
@@ -19,31 +18,46 @@ namespace WhiskItUp.Controllers
         }
 
         // GET: Users
-        public async Task<IActionResult> Index(EGender? gender, string? sortOrder, int page = 1, int pageSize = 10)
+
+        public async Task<IActionResult> Index(string sortBy)
         {
-            var query = _context.tblUser.AsQueryable();
+           
+            var users = await _context.tblUser
+                                      .Include(u => u.UserRecipeMappings)
+                                      .ThenInclude(ur => ur.Recipe)
+                                      .ToListAsync();
 
+            if (string.IsNullOrEmpty(sortBy))
+             {
+                sortBy = "Default Sort";
+            }
+               
 
-            switch (sortOrder?.ToLower().Trim())
+            switch (sortBy.ToLower().Trim())
             {
-                case "name_asc": query = query.OrderBy(u => u.FullName); break;
-                case "name_desc": query = query.OrderByDescending(u => u.FullName); break;
-                default: query = query.OrderBy(u => u.FullName); break;
+                case "name_asc":
+                    users = users.OrderBy(u => u.FullName).ToList();
+                    break;
+                case "name_desc":
+                    users = users.OrderByDescending(u => u.FullName).ToList();
+                    break;
+                default:
+                    users = users.OrderBy(u => u.FullName).ThenByDescending
+                                 (u => u.Email)
+                                 .ToList();
+                    break;
             }
 
-            var totalCount = await query.CountAsync();
-            var users = await query.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
-
-            ViewBag.Page = page;
-            ViewBag.TotalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
-
-            return View(users);
+            return View(users); 
         }
+
+
 
         // GET: Users/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null) return NotFound();
+            if (id == null)
+               return NotFound();
 
             var user = await _context.tblUser
                 .Include(u => u.UserRecipeMappings)

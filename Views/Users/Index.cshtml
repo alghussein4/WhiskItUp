@@ -1,5 +1,6 @@
 ﻿@model IEnumerable<WhiskItUp.Models.User>
 
+
 @{
     ViewData["Title"] = "Users";
 
@@ -49,13 +50,9 @@
         <thead>
             <tr>
                 <th class="ps-3">
-                    <a class="sort-btn" asp-action="Index" asp-route-sortOrder="name_asc">
-                        <i class="bi bi-arrow-up"></i>
-                    </a>
-                    <span class="sort-title">@Html.DisplayNameFor(model => model.FullName)</span>
-                    <a class="sort-btn" asp-action="Index" asp-route-sortOrder="name_desc">
-                        <i class="bi bi-arrow-down"></i>
-                    </a>
+                    <a asp-action="Index" asp-route-sortBy="name_asc">▲</a>
+                    @Html.DisplayNameFor(model => model.FullName)
+                    <a asp-action="Index" asp-route-sortBy="name_desc">▼</a>
                 </th>
                 <th>@Html.DisplayNameFor(model => model.Email)</th>
                 <th>@Html.DisplayNameFor(model => model.Gender)</th>
@@ -95,27 +92,3 @@
     </table>
 </div>
 
-@if (totalPages > 1)
-{
-    <div class="d-flex justify-content-between align-items-center mt-4">
-        <span class="text-muted small">Showing page @currentPage of @totalPages</span>
-        <nav>
-            <ul class="pagination mb-0">
-                <li class="page-item @(currentPage == 1 ? "disabled" : "")">
-                    <a class="page-link" asp-action="Index" asp-route-page="@(currentPage - 1)" asp-route-sortOrder="@currentSort">Previous</a>
-                </li>
-
-                @for (int i = 1; i <= totalPages; i++)
-                {
-                    <li class="page-item @(i == currentPage ? "active" : "")">
-                        <a class="page-link" asp-action="Index" asp-route-page="@i" asp-route-sortOrder="@currentSort">@i</a>
-                    </li>
-                }
-
-                <li class="page-item @(currentPage == totalPages ? "disabled" : "")">
-                    <a class="page-link" asp-action="Index" asp-route-page="@(currentPage + 1)" asp-route-sortOrder="@currentSort">Next</a>
-                </li>
-            </ul>
-        </nav>
-    </div>
-}

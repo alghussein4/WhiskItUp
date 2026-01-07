@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WhiskItUp.Data;
 using WhiskItUp.Models;
-
 namespace WhiskItUp.Controllers
 {
     [Authorize]
@@ -26,7 +25,7 @@ namespace WhiskItUp.Controllers
 
             if (!string.IsNullOrEmpty(searchString))
             {
-                //
+                
                 if (searchString.ToLower() == "fast")
                 {
                     recipes = recipes.Where(r => r.Time <= 30);
@@ -70,7 +69,13 @@ namespace WhiskItUp.Controllers
 
         
         public IActionResult Create()
+
         {
+            string userName = (User.Identity?.Name is null) ? "Guest" : User.Identity?.Name!;
+            if (!userName.Contains("admin", StringComparison.OrdinalIgnoreCase))
+            {
+                return RedirectToAction(nameof(Index));
+            }
             return View();
         }
 
